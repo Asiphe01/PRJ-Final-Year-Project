@@ -65,7 +65,7 @@ function PrimaryDashboard ({ patient }) {
                 <div className="vital-card">
                     <p className="vital-title">Glucose Levels</p>
                     <p className="vital value">{patient.glucose} mg/dL</p>
-                    <P className="vital-note">5% less than last month</P>
+                    <p className="vital-note">5% less than last month</p>
                 </div>
                </div>
            </div>
