@@ -1,6 +1,8 @@
-import Sidebar from './Components/sidebar';
-import HomeDashboard from './Components/HomeDashboard';
-import PrimaryDashboard from './Components/PrimaryDashboard';
+import {useState} from 'react';
+import Sidebar from './Components/sidebar.jsx';
+import HomeDashboard from './Components/HomeDashboard.jsx';
+import PrimaryDashboard from './Components/PrimaryDashboard.jsx';
+import DailyAlerts from './Components/DailyAlerts.jsx';
 import './App.css';
 
 const dummyPatient = {
@@ -14,13 +16,25 @@ const dummyPatient = {
 };
 
 function App() {
+  const [activeTab, setActiveTab] = useState('home');
   return (
-    <div className="app-layout">
-      <Sidebar />
-      <div className="main-content">
-        <HomeDashboard userName="Peter" />
-        <PrimaryDashboard patient={dummyPatient} />
-      </div>
+    <div className="app-container">
+      {/*left Vertical Sidebar*/}
+      <Sidebar activeTab={activeTab} onSelectTab={setActiveTab} />
+
+      {/*Main Display Area*/}
+      <main className="dashboard-content">
+        {activeTab === 'home' && <HomeDashboard userName={dummyPatient.name.split(' ')[0]} />}
+        
+
+        {activeTab === 'dashboard' && <PrimaryDashboard patient={dummyPatient} />}
+        
+        </main>
+      
+      {/* Right Column Alerts*/}
+      <aside className="alerts-column">
+        <DailyAlerts />
+      </aside>
     </div>
   );
 }
