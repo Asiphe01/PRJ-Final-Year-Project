@@ -204,7 +204,7 @@ body {
 .primary-dashboard-card {
   background-color: #1a102a;
   border-radius: 24px;
-  padding: 24px;
+  padding: 10px;
   height: 100%;
   width: 100%;
   box-sizing: border-box;
@@ -272,14 +272,14 @@ body {
 .pd-content-grid {
   display: grid;
   grid-template-columns: 1fr 240px;
-  gap: 24px;
+  gap: 20px;
 }
 
 /* Left Section Layout */
 .pd-left-section {
   display: flex;
   flex-direction: column;
-  gap: 230px;
+  gap: 90px;
 }
 
 .heart-bp-row {
@@ -289,7 +289,7 @@ body {
 }
 
 .heart-graphic-wrapper {
-  width: 160px;
+  width: 170px;
   flex-shrink: 0;
 }
 
@@ -361,7 +361,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 120px;
+  min-height: 100px;
   box-sizing: border-box;
 }
 
@@ -543,4 +543,161 @@ body {
   margin: 0;
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+}
+
+/* Registration Form Styles */
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+}
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.profile-card {
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 450px;
+}
+
+.profile-card h2 {
+    margin-bottom: 5px;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+.credential-group {
+    margin-bottom: 16px;
+}
+
+.credential-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.credential-value {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.token-box {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #e83e8c;
+    background-color: #fdf2f4;
+    border-color: #f8d7da;
+}
+
+.info-grid {
+    display: flex;
+    gap: 10px;
+}
+
+.info-grid .credential-group {
+    flex: 1;
+}
+
+/* Role Badges */
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.badge.coach {
+    background-color: #e2e8f0;
+    color: #2d3748;
+}
+
+.badge.athlete {
+    background-color: #eef2ff;
+    color: #3b82f6;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 25px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 11px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+}
+
+.login-link-btn {
+    display: block;
+    text-align: center;
+    padding: 11px;
+    background-color: #f8f9fa;
+    color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.login-link-btn:hover {
+    background-color: #eef5ff;
+}
+
+.loading {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 1.1rem;
+    color: #666;
 }

@@ -5,6 +5,7 @@ import PrimaryDashboard from './Components/PrimaryDashboard.jsx';
 import DailyAlerts from './Components/DailyAlerts.jsx';
 import './App.css';
 
+
 const dummyPatient = {
   name: 'Jazzy Smith',
   gender: 'Female',
