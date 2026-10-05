@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './ProfilePage.css';
 
-const ProfilePage = () => {
-    const [userData, setUserData] = useState(null);
+function ProfilePage() {
     const navigate = useNavigate();
 
-    useEffect(() => {
-        // Read user details from browser cache (localStorage)
+    const getCachedUserData = () => {
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('userRole') || localStorage.getItem('role');
         const fullName = localStorage.getItem('userName') || localStorage.getItem('fullName');
@@ -15,22 +12,27 @@ const ProfilePage = () => {
         const age = localStorage.getItem('userAge');
         const height = localStorage.getItem('userHeight');
 
-        // If no cache/token exists, redirect to login
         if (!token && !fullName) {
-            navigate('/login');
-            return;
+            return null;
         }
 
-        // Set state with cached information// This will be displayed on the profile pa
-        setUserData ({
+        return {
             fullName: fullName || 'Not Provided',
             role: role ? role.toUpperCase() : 'USER',
             gender: gender || 'Not Provided',
             age: age || 'Not Provided',
             height: height ? `${height} cm` : 'Not Provided',
             tokenSnippet: token ? `${token.substring(0, 15)}...` : 'No active session token'
-        });
-    }, [navigate]);
+        };
+    };
+
+    const [userData] = useState(() => getCachedUserData());
+
+    useEffect(() => {
+        if (!userData) {
+            navigate('/login');
+        }
+    }, [navigate, userData]);
 
     const handleLogout = () => {
         // Clear the entry cache
@@ -84,7 +86,7 @@ const ProfilePage = () => {
                     <button className="logout-btn" onClick={handleLogout}>
                         Clear Cache & Logout
                     </button>
-                    
+
                     {/* Link back to the login page for already logged-in users */}
                     <Link to="/login" className="login-link-btn">
                         Switch Account / Login Page
@@ -93,6 +95,6 @@ const ProfilePage = () => {
             </div>
         </div>
     );
-};
+}
 
 export default ProfilePage;

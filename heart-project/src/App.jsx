@@ -3,6 +3,7 @@ import Sidebar from './Components/sidebar.jsx';
 import HomeDashboard from './Components/HomeDashboard.jsx';
 import PrimaryDashboard from './Components/PrimaryDashboard.jsx';
 import DailyAlerts from './Components/DailyAlerts.jsx';
+import ProfilePage from './Components/ProfilePage.jsx';
 import './App.css';
 
 
@@ -25,6 +26,7 @@ function App() {
 
       {/*Main Display Area*/}
       <main className="dashboard-content">
+        {activeTab === 'profile' && <ProfilePage />}
         {activeTab === 'home' && <HomeDashboard userName={dummyPatient.name.split(' ')[0]} />}
         
 
