@@ -8,6 +8,7 @@ import RegisterPage from './Components/Register.jsx';
 import Reports from './Components/Reports.jsx';
 import './App.css';
 
+
 const dummyPatient = {
   name: 'Jazzy Smith',
   gender: 'Female',

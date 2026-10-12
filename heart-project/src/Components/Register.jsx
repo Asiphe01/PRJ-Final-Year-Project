@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 function RegisterPage() {
+const Register = () => {
     // Form State
     const [role, setRole] = useState('athlete');
     const [fullName, setFullName] = useState('');
@@ -180,6 +181,7 @@ function RegisterPage() {
             </form>
         </div>
     );
+}
 };
 
 export default RegisterPage;
