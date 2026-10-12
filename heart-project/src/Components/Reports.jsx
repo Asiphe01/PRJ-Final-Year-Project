@@ -92,6 +92,7 @@ function Reports() {
   const [filter, setFilter] = useState('all');
   const [query, setQuery] = useState('');
   
+  
   // If user is an athlete, find their specific record in PLAYERS, otherwise default to first player
   const defaultPlayerId = useMemo(() => {
     if (!isCoach) {

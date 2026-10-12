@@ -387,7 +387,7 @@ body {
 .primary-dashboard-card {
   background-color: #1a102a;
   border-radius: 24px;
-  padding: 10px;
+  padding: 24px;
   height: 100%;
   width: 100%;
   box-sizing: border-box;
@@ -454,15 +454,15 @@ body {
 /* Overall Grid Setup */
 .pd-content-grid {
   display: grid;
-  grid-template-columns: 1fr 240px;
+  grid-template-columns: 1fr 260px;
   gap: 24px;
 }
 
 /* Left Section Layout */
-.pd-left-section {
-  display: flex;
-  flex-direction: column;
-  gap: 230px;
+.pd-left-section,
+.pd-right-column {
+  display: contents;
+ 
 }
 
 .heart-bp-row {
@@ -474,7 +474,8 @@ body {
 }
 
 .heart-graphic-wrapper {
-  width: 160px;
+  width: 300px;
+  height: 300px;
   flex-shrink: 0;
   display: flex;
   justify-content: center;
@@ -601,7 +602,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 100px;
+  min-height: 120px;
   box-sizing: border-box;
 }
 
@@ -785,7 +786,7 @@ body {
   color: var(--text-muted);
 }
 
-/* ---------- Reports page ---------- */
+/*Reports page*/
 .rp-page {
   display: flex;
   flex-direction: column;
