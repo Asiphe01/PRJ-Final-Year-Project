@@ -13,7 +13,6 @@ function lastDays(n) {
   });
 }
 
-// flags = { dayIndex: 'ECG label' } for any non-normal ECG reading
 function build(hr, glucose, sys, flags = {}) {
   const days = lastDays(hr.length);
   return days.map((date, i) => ({
@@ -48,8 +47,6 @@ const PLAYERS = [
       [112, 114, 111, 113, 115, 112, 113]) },
 ];
 
-/* helpers */
-
 const STATUS_LABEL = { stable: 'Stable', watch: 'Monitor', attention: 'Needs attention' };
 
 function getStatus(r) {
@@ -69,7 +66,6 @@ const METRICS = {
   ecg:     { label: 'ECG',        color: '#00d2ff' },
 };
 
-// builds a repeating ECG waveform; faster heart rate = beats closer together
 function ecgWaveform(bpm) {
   const beat = [0, 0.1, 0.2, 0.1, 0, -0.15, 1.6, -0.4, 0, 0.25, 0.45, 0.25, 0];
   const gap = Math.max(2, Math.round(1800 / bpm) - beat.length);
@@ -81,28 +77,13 @@ function ecgWaveform(bpm) {
   return out;
 }
 
-/* Components */
-
-function Reports() {
-  const userRole = (localStorage.getItem('userRole') || localStorage.getItem('role') || 'coach').toLowerCase();
-  const loggedInName = localStorage.getItem('userName') || localStorage.getItem('fullName') || 'Jazzy Smith';
-
+function Reports({ profile }) {
+  const userRole = (profile?.role || '').toLowerCase();
+  const loggedInName = profile?.fullName || '';
   const isCoach = userRole === 'coach';
 
   const [filter, setFilter] = useState('all');
   const [query, setQuery] = useState('');
-  
-  
-  // If user is an athlete, find their specific record in PLAYERS, otherwise default to first player
-  const defaultPlayerId = useMemo(() => {
-    if (!isCoach) {
-      const match = PLAYERS.find((p) => p.name.toLowerCase() === loggedInName.toLowerCase());
-      return match ? match.id : PLAYERS[0].id;
-    }
-    return PLAYERS[0].id;
-  }, [isCoach, loggedInName]);
-
-  const [selectedId, setSelectedId] = useState(defaultPlayerId);
   const [metric, setMetric] = useState('hr');
   const [range, setRange] = useState(7);
 
@@ -111,6 +92,13 @@ function Reports() {
     []
   );
 
+  const myPlayerId = useMemo(() => {
+    const match = PLAYERS.find((p) => p.name.toLowerCase() === loggedInName.toLowerCase());
+    return match ? match.id : null;
+  }, [loggedInName]);
+
+  const [selectedId, setSelectedId] = useState(isCoach ? PLAYERS[0].id : myPlayerId);
+
   const counts = {
     all: players.length,
     stable: players.filter((p) => p.status === 'stable').length,
@@ -118,16 +106,33 @@ function Reports() {
     attention: players.filter((p) => p.status === 'attention').length,
   };
 
-  const visible = players.filter(
-    (p) =>
-      (filter === 'all' || p.status === filter) &&
-      p.name.toLowerCase().includes(query.toLowerCase())
-  );
+  const visible = isCoach
+    ? players.filter(
+        (p) =>
+          (filter === 'all' || p.status === filter) &&
+          p.name.toLowerCase().includes(query.toLowerCase())
+      )
+    : players.filter((p) => p.id === myPlayerId);
 
-  const selected = players.find((p) => p.id === selectedId) || players[0];
+  const selected = isCoach
+    ? players.find((p) => p.id === selectedId) || players[0]
+    : players.find((p) => p.id === myPlayerId);
+
+  if (!isCoach && !selected) {
+    return (
+      <div className="rp-page">
+        <div className="rp-card">
+          <h2 className="pd-title">No records found</h2>
+          <p className="rp-empty">
+            We couldn't find health records matching your account name ({loggedInName || 'unknown'}).
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const records = selected.records.slice(-range);
   const latest = records[records.length - 1];
-
   const hrs = records.map((r) => r.hr);
   const glus = records.map((r) => r.glucose);
   const sysArr = records.map((r) => r.sys);
@@ -173,54 +178,56 @@ function Reports() {
 
   return (
     <div className="rp-page">
-      {/* This is to display the player selection strip */}
       <div className="rp-card">
         <div className="rp-header">
           <div>
-            <span className="pd-subtitle">Coach view</span>
-            <h2 className="pd-title">Player Health Reports</h2>
+            <span className="pd-subtitle">{isCoach ? 'Coach view' : 'Athlete view'}</span>
+            <h2 className="pd-title">{isCoach ? 'Player Health Reports' : 'My Health Report'}</h2>
           </div>
 
-          <div className="rp-header-controls">
-            <input
-              className="rp-search"
-              placeholder="Search player..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <div className="rp-tabs">
-              {filterTabs.map(([key, label]) => (
-                <button
-                  key={key}
-                  className={`rp-tab ${filter === key ? 'active' : ''}`}
-                  onClick={() => setFilter(key)}
-                >
-                  {label} <span className="rp-count">{counts[key]}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="rp-player-strip">
-          {visible.length === 0 && <p className="rp-empty">No players match.</p>}
-          {visible.map((p) => (
-            <button
-              key={p.id}
-              className={`rp-player-chip ${p.id === selected.id ? 'selected' : ''}`}
-              onClick={() => setSelectedId(p.id)}
-            >
-              <div className="rp-avatar">
-                {initials(p.name)}
-                <span className={`rp-dot ${p.status}`} />
+          {isCoach && (
+            <div className="rp-header-controls">
+              <input
+                className="rp-search"
+                placeholder="Search player..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <div className="rp-tabs">
+                {filterTabs.map(([key, label]) => (
+                  <button
+                    key={key}
+                    className={`rp-tab ${filter === key ? 'active' : ''}`}
+                    onClick={() => setFilter(key)}
+                  >
+                    {label} <span className="rp-count">{counts[key]}</span>
+                  </button>
+                ))}
               </div>
-              <span className="rp-chip-name">{p.name}</span>
-            </button>
-          ))}
+            </div>
+          )}
         </div>
+
+        {isCoach && (
+          <div className="rp-player-strip">
+            {visible.length === 0 && <p className="rp-empty">No players match.</p>}
+            {visible.map((p) => (
+              <button
+                key={p.id}
+                className={`rp-player-chip ${p.id === selected.id ? 'selected' : ''}`}
+                onClick={() => setSelectedId(p.id)}
+              >
+                <div className="rp-avatar">
+                  {initials(p.name)}
+                  <span className={`rp-dot ${p.status}`} />
+                </div>
+                <span className="rp-chip-name">{p.name}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/*This is to display the selected player's details*/}
       <div className="rp-detail">
         <div className="rp-card rp-profile">
           <div className="rp-avatar lg">{initials(selected.name)}</div>
@@ -267,7 +274,6 @@ function Reports() {
         </div>
       </div>
 
-      {/* Chart */}
       <div className="rp-card">
         <div className="rp-card-top">
           <h3 className="rp-section-title">{selected.name} – trends</h3>
@@ -327,7 +333,6 @@ function Reports() {
         </div>
       </div>
 
-      {/* Recorded Readings */}
       <div className="rp-card">
         <h3 className="rp-section-title">Recorded readings</h3>
         <div className="rp-table-scroll">

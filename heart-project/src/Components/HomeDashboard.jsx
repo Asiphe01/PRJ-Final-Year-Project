@@ -97,10 +97,12 @@ function StressGauge({ value = 20 }) {
   );
 }
 
-function HomeDashboard({userName= 'Peter'}) {
-    return (
-        <div className="section">
-            <h2 className="section-label">Homedashboard</h2>
+function HomeDashboard({ profile }) {
+  const firstName = profile?.fullName?.split(' ')[0] || 'there';
+
+  return (
+    <div className="section">
+      <h2 className="section-label">Homedashboard</h2>
 
             <div className="home-card">
                 <div className="hero-banner-card">
@@ -115,7 +117,7 @@ function HomeDashboard({userName= 'Peter'}) {
                     </div>
 
                  <div className="hero-text-block">
-                    <p className="hero-greeting">Hi {userName}!</p>
+                      <p className="hero-greeting">Hi {firstName}!</p>
                     <p className="hero-sub">How are you today?</p>
                   </div>
                 </div>

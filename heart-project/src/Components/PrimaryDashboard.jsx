@@ -59,39 +59,38 @@ function BeatingHeartGraphic() {
   );
 }
 
-function PrimaryDashboard ({ patient }) {
-    return (
-        <div className="primary-dashboard-card">
+function PrimaryDashboard({ profile }) {
+  const name   = profile?.fullName || 'Loading…';
+  const gender = profile?.gender || '—';
+  const age    = profile?.age ?? '—';
+
+  return (
+    <div className="primary-dashboard-card">
       <div className="pd-header-titles">
         <span className="pd-subtitle">Check Your:</span>
         <h2 className="pd-title">Overall Health Status</h2>
       </div>
 
-      {/* Top Patient Info Header */}
       <div className="patient-profile-card">
         <div className="profile-avatar-wrapper">
-          <img 
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
-            alt="Jazzy Smith" 
+          <img
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"
+            alt={name}
             className="profile-avatar-img"
           />
         </div>
         <div className="profile-details-grid">
           <div className="detail-item">
             <span className="detail-label">Name:</span>
-            <span className="detail-value">Jazzy Smith</span>
+            <span className="detail-value">{name}</span>
           </div>
           <div className="detail-item">
             <span className="detail-label">Gender:</span>
-            <span className="detail-value">Female</span>
+            <span className="detail-value">{gender}</span>
           </div>
           <div className="detail-item">
             <span className="detail-label">Age:</span>
-            <span className="detail-value">22</span>
-          </div>
-          <div className="detail-item">
-            <span className="detail-label">Height:</span>
-            <span className="detail-value">5'8</span>
+            <span className="detail-value">{age}</span>
           </div>
         </div>
       </div>
