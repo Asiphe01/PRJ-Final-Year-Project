@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // Read user details from browser cache (localStorage)
 const getCachedUserData = () => {

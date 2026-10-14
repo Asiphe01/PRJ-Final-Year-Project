@@ -35,7 +35,8 @@ function Sidebar({ activeTab, onSelectTab }) {
                     </nav>
 
                     <div className="sidebar-footer">
-                        <button className="nav-item logout-button">
+                        <button 
+                        className="nav-item logout-button">
                             <LogOut size={20} className="logout-icon" />
                         </button>
                     </div>
