@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import React from 'react';
 
-// Read user details from browser cache (localStorage)
 const ProfilePage = ({ profile, authUser, onSignOut }) => {
     if (!profile) {
         return (
@@ -13,20 +12,7 @@ const ProfilePage = ({ profile, authUser, onSignOut }) => {
         );
     }
 
-    return {
-        fullName: fullName || 'Not Provided',
-        role: role ? role.toUpperCase() : 'USER',
-        gender: gender || 'Not Provided',
-        age: age || 'Not Provided',
-        height: height ? `${height} cm` : 'Not Provided',
-        tokenSnippet: token ? `${token.substring(0, 15)}...` : 'No active session token',
-    };
-
-
- const role = (profile.role || 'user').toUpperCase();
-    
-
-   
+    const role = (profile.role || 'user').toUpperCase();
 
     return (
         <div className="profile-container">
@@ -36,12 +22,12 @@ const ProfilePage = ({ profile, authUser, onSignOut }) => {
 
                 <div className="credential-group">
                     <label>Full Name</label>
-                    <div className="credential-value">{profile.fullName}</div>
+                    <div className="credential-value">{profile.fullName || 'Not Provided'}</div>
                 </div>
 
                 <div className="credential-group">
                     <label>Email</label>
-                    <div className="credential-value">{authUser?.email}</div>
+                    <div className="credential-value">{authUser?.email || 'Not Provided'}</div>
                 </div>
 
                 <div className="credential-group">
@@ -59,12 +45,15 @@ const ProfilePage = ({ profile, authUser, onSignOut }) => {
                         <div className="credential-value">{profile.age ?? 'Not Provided'}</div>
                     </div>
                 </div>
+
                 <div className="credential-group">
                     <label>Height</label>
-                    <div className="credential-value">{userData.height}</div>
+                    <div className="credential-value">
+                        {profile.height ? `${profile.height} cm` : 'Not Provided'}
+                    </div>
                 </div>
 
-                <button className="logout-btn" onClick={handleLogout}>
+                <button className="logout-btn" onClick={onSignOut}>
                     Clear Cache & Logout
                 </button>
             </div>

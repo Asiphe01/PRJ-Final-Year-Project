@@ -4,7 +4,6 @@ import {
   ResponsiveContainer, CartesianGrid,
 } from 'recharts';
 
-
 function lastDays(n) {
   return Array.from({ length: n }, (_, i) => {
     const d = new Date();
@@ -58,28 +57,17 @@ function getStatus(r) {
 const avg = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
 const fmtDate = (d) =>
   new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
-const initials = (name) => name.split(' ').map((n) => n[0]).join('');
+const initials = (name) => (name ? name.split(' ').map((n) => n[0]).join('') : 'U');
 
 const METRICS = {
-  hr:      { label: 'Heart rate', key: 'hr',      unit: 'bpm',    color: '#ff4d4d', domain: [40, 130] },
+  hr:      { label: 'Heart rate', key: 'hr',    unit: 'bpm',    color: '#ff4d4d', domain: [40, 130] },
   glucose: { label: 'Glucose',    key: 'glucose', unit: 'mmol/L', color: '#4da6ff', domain: [3, 10] },
   ecg:     { label: 'ECG',        color: '#00d2ff' },
 };
 
-function ecgWaveform(bpm) {
-  const beat = [0, 0.1, 0.2, 0.1, 0, -0.15, 1.6, -0.4, 0, 0.25, 0.45, 0.25, 0];
-  const gap = Math.max(2, Math.round(1800 / bpm) - beat.length);
-  const out = [];
-  for (let b = 0; b < 4; b++) {
-    beat.forEach((v) => out.push({ v }));
-    for (let i = 0; i < gap; i++) out.push({ v: 0 });
-  }
-  return out;
-}
-
 function Reports({ profile }) {
   const userRole = (profile?.role || '').toLowerCase();
-  const loggedInName = profile?.fullName || '';
+  const loggedInName = profile?.fullName || 'User';
   const isCoach = userRole === 'coach';
 
   const [filter, setFilter] = useState('all');
@@ -87,15 +75,32 @@ function Reports({ profile }) {
   const [metric, setMetric] = useState('hr');
   const [range, setRange] = useState(7);
 
-  const players = useMemo(
-    () => PLAYERS.map((p) => ({ ...p, status: getStatus(p.records[p.records.length - 1]) })),
-    []
-  );
+  const players = useMemo(() => {
+    const basePlayers = PLAYERS.map((p) => ({ 
+      ...p, 
+      status: getStatus(p.records[p.records.length - 1]) 
+    }));
+
+    if (loggedInName && !basePlayers.some((p) => p.name.toLowerCase() === loggedInName.toLowerCase())) {
+      basePlayers.push({
+        id: 999,
+        name: loggedInName,
+        age: profile?.age || 22,
+        records: build(
+          [72, 75, 70, 78, 74, 76, 72], 
+          [5.2, 5.4, 5.1, 5.6, 5.3, 5.5, 5.4],
+          [110, 112, 111, 113, 112, 114, 112]
+        ),
+      });
+    }
+
+    return basePlayers;
+  }, [loggedInName, profile]);
 
   const myPlayerId = useMemo(() => {
-    const match = PLAYERS.find((p) => p.name.toLowerCase() === loggedInName.toLowerCase());
-    return match ? match.id : null;
-  }, [loggedInName]);
+    const match = players.find((p) => p.name.toLowerCase() === loggedInName.toLowerCase());
+    return match ? match.id : players[0].id;
+  }, [loggedInName, players]);
 
   const [selectedId, setSelectedId] = useState(isCoach ? PLAYERS[0].id : myPlayerId);
 
@@ -116,20 +121,7 @@ function Reports({ profile }) {
 
   const selected = isCoach
     ? players.find((p) => p.id === selectedId) || players[0]
-    : players.find((p) => p.id === myPlayerId);
-
-  if (!isCoach && !selected) {
-    return (
-      <div className="rp-page">
-        <div className="rp-card">
-          <h2 className="pd-title">No records found</h2>
-          <p className="rp-empty">
-            We couldn't find health records matching your account name ({loggedInName || 'unknown'}).
-          </p>
-        </div>
-      </div>
-    );
-  }
+    : players.find((p) => p.id === myPlayerId) || players[0];
 
   const records = selected.records.slice(-range);
   const latest = records[records.length - 1];
@@ -299,17 +291,7 @@ function Reports({ profile }) {
         <div className="rp-chart-box">
           <ResponsiveContainer width="100%" height="100%">
             {metric === 'ecg' ? (
-              <LineChart data={ecgWaveform(latest.hr)}>
-                <YAxis hide domain={[-1, 2]} />
-                <Line
-                  type="linear"
-                  dataKey="v"
-                  stroke={m.color}
-                  strokeWidth={2}
-                  dot={false}
-                  isAnimationActive={false}
-                />
-              </LineChart>
+              <LineChart data={[]} />
             ) : (
               <LineChart data={chartData} margin={{ top: 10, right: 16, left: -10, bottom: 0 }}>
                 <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />

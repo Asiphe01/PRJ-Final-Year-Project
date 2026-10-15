@@ -4,7 +4,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { ref, set } from 'firebase/database';
 
 function LoginPage() {
   const [mode, setMode] = useState('login'); // 'login' | 'register'
@@ -67,7 +67,7 @@ function LoginPage() {
     setLoading(true);
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
-      await setDoc(doc(db, 'users', cred.user.uid), {
+      await set(ref(db, `users/${cred.user.uid}`), {
         fullName: fullName.trim(),
         email,
         gender,
@@ -75,7 +75,8 @@ function LoginPage() {
         role,
         createdAt: new Date().toISOString(),
       });
-    } catch (err) {
+    } 
+    catch (err) {
       setError(friendlyError(err.code));
     } finally {
       setLoading(false);
