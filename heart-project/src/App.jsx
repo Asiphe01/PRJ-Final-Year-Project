@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { auth, db } from './firebase';
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { getDatabase } from 'firebase/database';
-import { useUserProfile } from './hooks/useUserProfile';
+import { getDatabase } from 'firebase/database';import { useUserProfile } from './hooks/useUserProfile';
 
 import Sidebar        from './Components/sidebar.jsx';
 import HomeDashboard  from './Components/HomeDashboard.jsx';
